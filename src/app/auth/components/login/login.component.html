@@ -1,0 +1,43 @@
+<div class="container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <!-- Email input field -->
+    <div class="form-group mb-3">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        class="form-control"
+        id="email"
+        placeholder="Enter email"
+        formControlName="email"
+      />
+      <span class="help-block" *ngIf="hasEmailErrors()"
+        ><p class="text-danger">
+          {{ getEmailError() }}
+        </p></span
+      >
+    </div>
+
+    <!-- Password input field -->
+    <div class="form-group mb-3">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        placeholder="Enter password"
+        formControlName="password"
+      />
+      <span class="help-block" *ngIf="hasPasswordErrors()"
+        ><p
+          *ngFor="let errorMessage of getPasswordErrors()"
+          class="text-danger"
+        >
+          {{ errorMessage }}
+        </p></span
+      >
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
