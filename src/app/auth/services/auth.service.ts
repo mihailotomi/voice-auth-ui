@@ -1,36 +1,21 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { JwtService } from './jwt.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  passwordErrorMessages = {
-    invalidLength: 'Password must be between 8 and 20 characters long.',
-    invalidCharacters:
-      'Password must contain at least one lowercase letter, one uppercase letter, and one special character.',
-  };
+  endpoint: string = 'http://localhost:3000';
 
-  constructor() {}
+  constructor(private http: HttpClient, jwtService: JwtService) {}
 
-  validatePassword = (control: AbstractControl): ValidationErrors | null => {
-    const value: string = control.value;
-
-    const lengthRegex = /^(?=.{8,20}$).*/;
-    const characterRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/;
-
-    if (!lengthRegex.test(value)) {
-      return {
-        invalidLength: this.passwordErrorMessages.invalidLength,
-      };
-    }
-
-    if (!characterRegex.test(value)) {
-      return {
-        invalidCharacters: this.passwordErrorMessages.invalidCharacters,
-      };
-    }
-
-    return null;
-  };
+  login(username: string, password: string) {
+    this.http
+      .post<any>(`${this.endpoint}/user/login`, { username, password })
+      .subscribe((res: any) => {
+        console.log(res);
+      });
+  }
 }

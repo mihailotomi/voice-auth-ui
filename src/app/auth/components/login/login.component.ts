@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { PasswordValidationService } from '../../services/password-validation.service';
 
 @Component({
   selector: 'app-login',
@@ -9,24 +10,30 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup = new FormGroup({
-    email: new FormControl(null, [Validators.required, Validators.email]),
+    username: new FormControl(null, [Validators.required]),
     password: new FormControl(null, [
       Validators.required,
-      this.authService.validatePassword,
+      this.passValidationService.validatePassword,
     ]),
   });
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private passValidationService: PasswordValidationService
+  ) {}
 
   ngOnInit(): void {}
 
   onSubmit() {
-    console.log(this.loginForm);
+    this.authService.login(
+      this.loginForm.get('username')?.value,
+      this.loginForm.get('password')?.value
+    );
   }
 
-  hasEmailErrors = () =>
-    (this.loginForm.get('email') as FormControl).touched &&
-    (this.loginForm.get('email') as FormControl).errors;
+  hasUsernameErrors = () =>
+    (this.loginForm.get('username') as FormControl).touched &&
+    (this.loginForm.get('username') as FormControl).errors;
 
   hasPasswordErrors = () =>
     (this.loginForm.get('password') as FormControl).touched &&
@@ -35,7 +42,9 @@ export class LoginComponent implements OnInit {
   getPasswordErrors = () => {
     let errorMessages: string[] = [];
     const errors = (this.loginForm.get('password') as FormControl).errors;
-    const passwordErrors = Object.keys(this.authService.passwordErrorMessages);
+    const passwordErrors = Object.keys(
+      this.passValidationService.passwordErrorMessages
+    );
 
     if (errors && errors['required']) {
       errorMessages.push('Password is required');
@@ -43,8 +52,8 @@ export class LoginComponent implements OnInit {
     passwordErrors.forEach((error) => {
       if (errors && errors[error]) {
         errorMessages.push(
-          this.authService.passwordErrorMessages[
-            error as keyof typeof this.authService.passwordErrorMessages
+          this.passValidationService.passwordErrorMessages[
+            error as keyof typeof this.passValidationService.passwordErrorMessages
           ]
         );
       }
@@ -53,9 +62,9 @@ export class LoginComponent implements OnInit {
     return errorMessages;
   };
 
-  getEmailError = () => {
-    if ((this.loginForm.get('email') as FormControl).errors) {
-      return 'Email must be a valid email';
+  getUsernameError = () => {
+    if ((this.loginForm.get('username') as FormControl).errors) {
+      return 'Username is required';
     }
     return null;
   };

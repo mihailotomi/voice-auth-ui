@@ -1,18 +1,18 @@
 <div class="container">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <!-- Email input field -->
+    <!-- Username input field -->
     <div class="form-group mb-3">
-      <label for="email">Email</label>
+      <label for="username">Username</label>
       <input
         type="text"
         class="form-control"
-        id="email"
-        placeholder="Enter email"
-        formControlName="email"
+        id="username"
+        placeholder="Enter username"
+        formControlName="username"
       />
-      <span class="help-block" *ngIf="hasEmailErrors()"
+      <span class="help-block" *ngIf="hasUsernameErrors()"
         ><p class="text-danger">
-          {{ getEmailError() }}
+          {{ getUsernameError() }}
         </p></span
       >
     </div>
