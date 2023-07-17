@@ -1,0 +1,7 @@
+<div [ngSwitch]="currentRole">
+  <app-admin-home *ngSwitchCase="'Role.ADMIN'"> </app-admin-home>
+
+  <app-operator-home *ngSwitchCase="'Role.OPERATOR'"> </app-operator-home>
+
+  <app-user-home *ngSwitchCase="'Role.OPERATOR'"> </app-user-home>
+</div>

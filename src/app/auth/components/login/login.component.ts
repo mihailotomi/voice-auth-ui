@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, effect } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { PasswordValidationService } from '../../services/password-validation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -19,12 +20,23 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private passValidationService: PasswordValidationService
-  ) {}
+    private passValidationService: PasswordValidationService,
+    private router: Router
+  ) {
+    effect(() => {
+      console.log(authService.isLoggedIn());
+
+      if (authService.isLoggedIn()) {
+        this.router.navigateByUrl('/');
+      }
+    });
+  }
 
   ngOnInit(): void {}
 
   onSubmit() {
+    console.log(this.authService.isLoggedIn());
+
     this.authService.login(
       this.loginForm.get('username')?.value,
       this.loginForm.get('password')?.value

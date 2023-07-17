@@ -6,6 +6,7 @@ import { LocalStorageService } from './local-storage.service';
 interface DecodedJwt {
   type: TokenType;
   sub: string;
+  exp: number;
 }
 
 @Injectable({
@@ -14,20 +15,43 @@ interface DecodedJwt {
 export class JwtService {
   token = signal<string>('');
   decodedToken: Signal<DecodedJwt | null>;
-  tokenType: Signal<TokenType | null>;
 
   constructor(private storageService: LocalStorageService) {
+    this.checkForToken();
     this.decodedToken = computed(() =>
       this.token() ? jwt_decode<DecodedJwt>(this.token()) : null
     );
-    this.tokenType = computed(() => {
-      const decodedToken = this.decodedToken();
-      return decodedToken && decodedToken.type ? decodedToken.type : null;
-    });
+  }
+
+  destroyToken() {
+    this.storageService.remove('token');
+    this.token.update(() => '');
   }
 
   setToken(token: string) {
     this.storageService.set('token', token);
     this.token.update(() => token);
+  }
+
+  private checkForToken() {
+    if (!this.token() && this.storageService.get('token')) {
+      this.token.update(() => this.storageService.get('token') as string);
+    } else {
+      this.destroyToken();
+    }
+  }
+
+  getToken() {
+    this.checkForToken();
+    return this.token();
+  }
+
+  isTokenExpired(): boolean {
+    const expTime = this.decodedToken()?.exp;
+    let expired: boolean = true;
+    if (expTime) {
+      expired = 1000 * expTime - new Date().getTime() < 5000;
+    }
+    return expired;
   }
 }
