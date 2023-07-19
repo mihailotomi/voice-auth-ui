@@ -14,10 +14,9 @@ import {
   Router,
   RoutesRecognized,
 } from '@angular/router';
-import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
-  declarations: [AppComponent, NavbarComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

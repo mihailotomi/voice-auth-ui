@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Role } from '../../enums/role';
-import { AuthService } from '../../services/auth.service';
+import { Role } from '../../auth/enums/role';
+import { AuthService } from '../../auth/services/auth.service';
 import { Observable } from 'rxjs';
-import { User } from '../../models/user';
+import { User } from '../../auth/models/user';
 
 @Component({
   selector: 'app-home',
