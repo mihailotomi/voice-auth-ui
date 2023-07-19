@@ -4,5 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-operator-home',
   templateUrl: './operator-home.component.html',
   styleUrls: ['./operator-home.component.scss'],
+  standalone: true,
 })
 export class OperatorHomeComponent {}

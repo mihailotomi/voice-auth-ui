@@ -24,9 +24,7 @@ export class AuthGuard implements CanActivate {
             return true;
           } else {
             // User is logged in, but doesn't have permission - redirect to home
-            this.router.navigate(['/'], {
-              queryParams: { returnUrl: state.url },
-            });
+            this.router.navigate(['/']);
             return false;
           }
         } else {

@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { PasswordValidationService } from '../../services/password-validation.service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -21,18 +22,22 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private passValidationService: PasswordValidationService,
-    private router: Router
+    private router: Router,
+    private sppiner: NgxSpinnerService
   ) {
     effect(() => {
-      console.log(authService.isLoggedIn());
-
-      if (authService.isLoggedIn()) {
+      if (this.authService.isLoggedIn()) {
         this.router.navigateByUrl('/');
       }
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.sppiner.show();
+    setTimeout(() => {
+      this.sppiner.hide();
+    }, 3000);
+  }
 
   onSubmit() {
     console.log(this.authService.isLoggedIn());

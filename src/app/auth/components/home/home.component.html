@@ -1,7 +1,11 @@
-<div [ngSwitch]="currentRole">
-  <app-admin-home *ngSwitchCase="'Role.ADMIN'"> </app-admin-home>
+<div *ngIf="currentUser$ | async as currentUser">
+  <div class="container">
+    <div [ngSwitch]="currentUser.role">
+      <app-admin-home *ngSwitchCase="Role.ADMIN"> </app-admin-home>
 
-  <app-operator-home *ngSwitchCase="'Role.OPERATOR'"> </app-operator-home>
+      <app-operator-home *ngSwitchCase="Role.OPERATOR"> </app-operator-home>
 
-  <app-user-home *ngSwitchCase="'Role.OPERATOR'"> </app-user-home>
+      <app-user-home *ngSwitchCase="Role.USER"> </app-user-home>
+    </div>
+  </div>
 </div>
