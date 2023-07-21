@@ -5,12 +5,13 @@ import { User } from '../models/user';
 import { TokenType } from '../enums/token-type';
 import { UserService } from './user.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  endpoint: string = 'http://localhost:3000';
+  endpoint: string = environment.endpoint;
   isLoggedIn: Signal<boolean>;
 
   public currentUser$: Observable<User | null>;

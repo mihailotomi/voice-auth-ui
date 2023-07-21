@@ -1,12 +1,23 @@
 <app-navbar></app-navbar>
 <div *ngIf="currentUser$ | async as currentUser">
   <div class="container py-4">
-    <div [ngSwitch]="currentUser.role">
+    <h4 class="mb-2">
+      Dobrodošao {{ currentUser?.firstName }} {{ currentUser?.lastName }}
+    </h4>
+    <hr />
+    <h5 class="my-3">Tvoj trenutni radni mesec:</h5>
+    <!-- <div [ngSwitch]="currentUser.role">
       <app-admin-home *ngSwitchCase="Role.ADMIN"> </app-admin-home>
 
       <app-operator-home *ngSwitchCase="Role.OPERATOR"> </app-operator-home>
 
       <app-user-home *ngSwitchCase="Role.USER"> </app-user-home>
+    </div> -->
+
+    <div class="max-w-5xl mx-auto grid gap-4 mb-8">
+      <app-working-hour-thumbnail
+        [working-hours]="currentWorkingHours"
+      ></app-working-hour-thumbnail>
     </div>
   </div>
 </div>
