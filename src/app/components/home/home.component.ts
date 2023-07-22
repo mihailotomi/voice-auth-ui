@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Role } from '../../auth/enums/role';
 import { AuthService } from '../../auth/services/auth.service';
 import { Observable, Subscription } from 'rxjs';
@@ -27,20 +27,24 @@ import { WorkingHoursModule } from 'src/app/working-hours/working-hours.module';
     CommonModule,
   ],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
   currentUser$: Observable<User | null>;
   currentWorkingHours?: WorkingHours;
-  workingHoursSubscription: Subscription;
+  workingHoursSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
     private whService: WorkingHoursService
   ) {
     this.currentUser$ = authService.currentUser$;
-
-    this.workingHoursSubscription = whService
+  }
+  ngOnInit(): void {
+    this.workingHoursSubscription = this.whService
       .getMyCurrent()
       .subscribe((workingHours) => (this.currentWorkingHours = workingHours));
+  }
+  ngOnDestroy(): void {
+    (this.workingHoursSubscription as Subscription).unsubscribe();
   }
 
   public get Role(): typeof Role {

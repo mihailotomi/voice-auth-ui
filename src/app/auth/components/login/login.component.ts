@@ -1,16 +1,20 @@
-import { Component, OnInit, effect } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { PasswordValidationService } from '../../services/password-validation.service';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Role } from '../../enums/role';
+import { Subscription, map } from 'rxjs';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+  userSubscription?: Subscription;
   loginForm: FormGroup = new FormGroup({
     username: new FormControl(null, [Validators.required]),
     password: new FormControl(null, [
@@ -29,19 +33,26 @@ export class LoginComponent implements OnInit {
       if (this.authService.isLoggedIn()) {
         this.router.navigateByUrl('/');
       }
+      if (authService.hasTempAdminToken()) {
+        this.router.navigateByUrl('/admin-login');
+      }
     });
   }
 
   ngOnInit(): void {
-    this.sppiner.show();
-    setTimeout(() => {
-      this.sppiner.hide();
-    }, 3000);
+    // this.sppiner.show();
+    // setTimeout(() => {
+    //   this.sppiner.hide();
+    // }, 3000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 
   onSubmit() {
-    console.log(this.authService.isLoggedIn());
-
     this.authService.login(
       this.loginForm.get('username')?.value,
       this.loginForm.get('password')?.value

@@ -13,7 +13,6 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
   endpoint: string = environment.endpoint;
   isLoggedIn: Signal<boolean>;
-
   public currentUser$: Observable<User | null>;
 
   constructor(
@@ -51,6 +50,13 @@ export class AuthService {
       .subscribe((res: { user: any; token: string }) => {
         this.jwtService.setToken(res.token);
       });
+  }
+
+  hasTempAdminToken() {
+    return (
+      !this.jwtService.isTokenExpired() &&
+      this.jwtService.decodedToken()?.type === TokenType.TEMPORARY_ADMIN
+    );
   }
 
   logout() {
