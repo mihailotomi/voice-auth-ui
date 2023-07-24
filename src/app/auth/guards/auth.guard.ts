@@ -1,47 +1,46 @@
-﻿import { Injectable } from '@angular/core';
+﻿import { inject } from '@angular/core';
 import {
   Router,
-  CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
+  CanActivateFn,
 } from '@angular/router';
 
 import { AuthService } from '../services/auth.service';
-import { map, of, switchMap } from 'rxjs';
+import { map } from 'rxjs';
 import { User } from '../models/user';
 
-@Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate {
-  constructor(private router: Router, private authService: AuthService) {}
+export const AuthGuard: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.authService.currentUser$.pipe(
-      map((user) => {
-        if (user) {
-          const { roles } = route.data;
+  return authService.currentUser$.pipe(
+    map((user) => {
+      if (user) {
+        const { roles } = route.data;
 
-          if (this.checkUserRole(roles, user)) {
-            return true;
-          } else {
-            // User is logged in, but doesn't have permission - redirect to home
-            this.router.navigate(['/']);
-            return false;
-          }
+        if (checkUserRole(router, roles, user)) {
+          return true;
         } else {
-          // User is not authenticated, redirect to login page with the return URL
-          this.router.navigate(['/login'], {
-            queryParams: { returnUrl: state.url },
-          });
+          // User is logged in, but doesn't have permission - redirect to home
+          router.navigate(['/']);
           return false;
         }
-      })
-    );
+      } else {
+        // User is not authenticated, redirect to login
+        router.navigate(['/login']);
+        return false;
+      }
+    })
+  );
+};
+const checkUserRole = (router: Router, roles: any, user: User): boolean => {
+  if (roles && !roles.includes(user.role)) {
+    router.navigate(['/']);
+    return false;
   }
-  private checkUserRole(roles: any, user: User): boolean {
-    if (roles && !roles.includes(user.role)) {
-      this.router.navigate(['/']);
-      return false;
-    }
-    return true;
-  }
-}
+  return true;
+};
