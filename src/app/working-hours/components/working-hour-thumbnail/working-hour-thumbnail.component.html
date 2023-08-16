@@ -1,0 +1,20 @@
+<div class="card alert alert-secondary">
+  <div class="row align-items-center">
+    <div class="col-lg-3 lg-right-border">
+      <span>
+        {{ workingHours?.user?.firstName }} {{ workingHours?.user?.lastName }}
+      </span>
+    </div>
+    <div class="col-lg-2 lg-right-border">
+      <span>
+        {{ getMonthName(workingHours?.month) }} {{ workingHours?.year }}.
+      </span>
+    </div>
+    <div class="col-lg-5">
+      <span> Radnih sati: {{ workingHours?.numHours }} </span>
+    </div>
+    <div class="col-lg-2">
+      <a href="" class="btn btn-primary">Detaljnije</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="container">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <!-- Username input field -->
+    <div class="form-group mb-3">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        placeholder="Enter username"
+        formControlName="username"
+      />
+      <span class="help-block" *ngIf="hasUsernameErrors()"
+        ><p class="text-danger">
+          {{ getUsernameError() }}
+        </p></span
+      >
+    </div>
+
+    <!-- Password input field -->
+    <div class="form-group mb-3">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        placeholder="Enter password"
+        formControlName="password"
+      />
+      <span class="help-block" *ngIf="hasPasswordErrors()"
+        ><p
+          *ngFor="let errorMessage of getPasswordErrors()"
+          class="text-danger"
+        >
+          {{ errorMessage }}
+        </p></span
+      >
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
